@@ -17,7 +17,7 @@ void device_info(void)
         uint32_t part = (id & SYSINFO_CHIP_ID_PART_BITS) >> SYSINFO_CHIP_ID_PART_LSB;
         uint32_t revision = (id & SYSINFO_CHIP_ID_REVISION_BITS) >> SYSINFO_CHIP_ID_REVISION_LSB;
     
-            printf("project: %s\n", DEVICE_PROJECT);
+    printf("project: %s\n", DEVICE_PROJECT);
     printf("repo: %s\n", DEVICE_REPO);
     printf("board: %s\n", DEVICE_BOARD);
     printf("serial: %s\n", board_id);
