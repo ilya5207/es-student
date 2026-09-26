@@ -1,0 +1,70 @@
+задание: 2.1.4
+проект: 211-command-usb
+устройство: 2e8a:000a
+серийный номер: 505431654120621C
+порт: COM3
+начало: 2026-09-27T00:24:12
+   0.000 --> fw_info
+   0.143 <-- fw_info
+   0.146 <-- dbg read_line:110 got fw_info
+   0.149 <-- object          address     value
+   0.151 <-- main            010000329 0xb5f0
+   0.154 <-- fw_info         01000069d 0x4b3d
+   0.157 <-- commands        010007b6c 0x100006f9
+   0.158 <-- - enable        0x10000281
+   0.158 <-- - disable       0x100002bd
+   0.159 <-- - info          0x10000301
+   0.159 <-- - version       0x100002f9
+   0.160 <-- - ping          0x10000309
+   0.161 <-- - mem_info      0x10000319
+   0.161 <-- - fw_info       0x10000321
+   0.162 <-- DEVICE_PROJECT  0x100076c8 211-command-usb
+   0.163 <-- DEVICE_BOARD    0x10007720 pico
+   0.163 <-- DEVICE_PROJECT  0x100076c8 211-command-usb
+   0.164 <-- data_variable   0x20000f40 101
+   0.165 <-- bss_variable    0x20001f0c 1
+   0.165 <-- stack_variable  0x20041f78 1946
+   0.166 <-- heap_variable   0x20041f7c 536880136
+   2.188 --> fw_info
+   2.346 <-- fw_info
+   2.349 <-- dbg read_line:110 got fw_info
+   2.351 <-- object          address     value
+   2.352 <-- main            010000329 0xb5f0
+   2.353 <-- fw_info         01000069d 0x4b3d
+   2.353 <-- commands        010007b6c 0x100006f9
+   2.354 <-- - enable        0x10000281
+   2.354 <-- - disable       0x100002bd
+   2.355 <-- - info          0x10000301
+   2.355 <-- - version       0x100002f9
+   2.356 <-- - ping          0x10000309
+   2.356 <-- - mem_info      0x10000319
+   2.357 <-- - fw_info       0x10000321
+   2.358 <-- DEVICE_PROJECT  0x100076c8 211-command-usb
+   2.358 <-- DEVICE_BOARD    0x10007720 pico
+   2.359 <-- DEVICE_PROJECT  0x100076c8 211-command-usb
+   2.360 <-- data_variable   0x20000f40 102
+   2.360 <-- bss_variable    0x20001f0c 2
+   2.361 <-- stack_variable  0x20041f78 1946
+   2.361 <-- heap_variable   0x20041f7c 536880136
+   4.382 --> fw_info
+   4.529 <-- fw_info
+   4.530 <-- dbg read_line:110 got fw_info
+   4.531 <-- object          address     value
+   4.531 <-- main            010000329 0xb5f0
+   4.532 <-- fw_info         01000069d 0x4b3d
+   4.533 <-- commands        010007b6c 0x100006f9
+   4.533 <-- - enable        0x10000281
+   4.534 <-- - disable       0x100002bd
+   4.534 <-- - info          0x10000301
+   4.535 <-- - version       0x100002f9
+   4.535 <-- - ping          0x10000309
+   4.536 <-- - mem_info      0x10000319
+   4.536 <-- - fw_info       0x10000321
+   4.537 <-- DEVICE_PROJECT  0x100076c8 211-command-usb
+   4.538 <-- DEVICE_BOARD    0x10007720 pico
+   4.539 <-- DEVICE_PROJECT  0x100076c8 211-command-usb
+   4.539 <-- data_variable   0x20000f40 103
+   4.540 <-- bss_variable    0x20001f0c 3
+   4.540 <-- stack_variable  0x20041f78 1946
+   4.541 <-- heap_variable   0x20041f7c 536880136
+итог: отправлено команд 3, принято строк 60
