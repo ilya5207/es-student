@@ -3,14 +3,14 @@
 устройство: 2e8a:000a
 серийный номер: 505431654120621C
 порт: COM3
-начало: 2026-10-03T23:57:07
+начало: 2026-10-04T01:32:57
    0.000 --> calc_pi
    0.001 <-- calc_pi
-   0.003 <-- dbg read_line:151 got calc_pi
-   1.029 --> uptime
+   0.004 <-- dbg read_line:153 got calc_pi
+   1.048 --> uptime
    4.710 <-- pi: 3.14159165
-   4.712 <-- time: 4706 ms
+   4.711 <-- time: 4706 ms
    4.712 <-- uptime
-   4.713 <-- dbg read_line:151 got uptime
-   4.714 <-- uptime: 16452 ms
+   4.715 <-- dbg read_line:153 got uptime
+   4.716 <-- uptime: 120978 ms
 итог: отправлено команд 2, принято строк 7
