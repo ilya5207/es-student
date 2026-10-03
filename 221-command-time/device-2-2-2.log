@@ -1,0 +1,63 @@
+задание: 2.2.2
+проект: 221-command-time
+устройство: 2e8a:000a
+серийный номер: 505431654120621C
+порт: COM3
+начало: 2026-10-03T23:23:25
+   0.000 --> uptime
+   0.001 <-- uptime
+   0.001 <-- dbg read_line:124 got uptime
+   0.002 <-- uptime: 4052 ms
+   0.412 --> boot_info
+   0.413 <-- boot_info
+   0.414 <-- dbg read_line:124 got boot_info
+   0.415 <-- vector table   0x10000100
+   0.417 <-- stack top    0x20042000
+   0.418 <-- reset        0x100001f7
+   0.419 <-- reset (even) 0x100001f6
+   0.421 <-- gpio in        0xd0000004
+   0.422 <-- led bit      0
+   0.423 <-- gpio_get     0
+   0.829 --> uptime
+   0.829 <-- uptime
+   0.830 <-- dbg read_line:124 got uptime
+   0.830 <-- uptime: 4881 ms
+   1.248 --> boot_info
+   1.249 <-- boot_info
+   1.249 <-- dbg read_line:124 got boot_info
+   1.250 <-- vector table   0x10000100
+   1.251 <-- stack top    0x20042000
+   1.252 <-- reset        0x100001f7
+   1.252 <-- reset (even) 0x100001f6
+   1.253 <-- gpio in        0xd0000004
+   1.254 <-- led bit      0
+   1.254 <-- gpio_get     0
+   1.667 --> uptime
+   1.667 <-- uptime
+   1.668 <-- dbg read_line:124 got uptime
+   1.669 <-- uptime: 5719 ms
+   2.088 --> boot_info
+   2.089 <-- boot_info
+   2.092 <-- dbg read_line:124 got boot_info
+   2.094 <-- vector table   0x10000100
+   2.094 <-- stack top    0x20042000
+   2.095 <-- reset        0x100001f7
+   2.095 <-- reset (even) 0x100001f6
+   2.096 <-- gpio in        0xd0000004
+   2.096 <-- led bit      0
+   2.096 <-- gpio_get     0
+   2.508 --> uptime
+   2.509 <-- uptime
+   2.511 <-- dbg read_line:124 got uptime
+   2.513 <-- uptime: 6560 ms
+   2.929 --> boot_info
+   2.929 <-- boot_info
+   2.930 <-- dbg read_line:124 got boot_info
+   2.931 <-- vector table   0x10000100
+   2.931 <-- stack top    0x20042000
+   2.932 <-- reset        0x100001f7
+   2.932 <-- reset (even) 0x100001f6
+   2.933 <-- gpio in        0xd0000004
+   2.934 <-- led bit      1
+   2.934 <-- gpio_get     1
+итог: отправлено команд 8, принято строк 48

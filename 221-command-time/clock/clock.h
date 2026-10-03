@@ -20,3 +20,4 @@
 #define CLOCKS_FC0_SRC_VALUE_CLK_RTC _u(0x0d)
 
 void clk_info(void);
+void uptime(void);
