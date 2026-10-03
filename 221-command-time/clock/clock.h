@@ -4,7 +4,6 @@
 #include "pico/stdlib.h"
 #include "hardware/clocks.h"
 
-
 #define CLOCKS_FCO_SRC_VALUE_ROSC_CLKSRC _u(0x03)
 #define CLOCKS_FCO_SRC_VALUE_CLK_REF _u(0x08)
 #define CLOCKS_FCO_SRC_VALUE_CLK_SYS _u(0x09)

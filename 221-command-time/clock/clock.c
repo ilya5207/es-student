@@ -15,12 +15,11 @@ void clk_info(void)
 
     printf("signal     set_khz measured_khz\n");
     
-
     row("clk_ref", clock_get_hz(clk_ref) / 1000, frequency_count_khz(CLOCKS_FCO_SRC_VALUE_CLK_REF));
     row("clk_sys", clock_get_hz(clk_sys) / 1000, frequency_count_khz(CLOCKS_FCO_SRC_VALUE_CLK_SYS));
     row("clk_peri", clock_get_hz(clk_peri) / 1000, frequency_count_khz(CLOCKS_FCO_SRC_VALUE_CLK_PERI));
     row("clk_usb", clock_get_hz(clk_usb) / 1000, frequency_count_khz(CLOCKS_FCO_SRC_VALUE_CLK_USB));
     row("clk_adc", clock_get_hz(clk_adc) / 1000, frequency_count_khz(CLOCKS_FCO_SRC_VALUE_CLK_ADC));
 
-    printf("%-8s %9s %9u\n", "rosc","-", frequency_count_khz(CLOCKS_FCO_SRC_VALUE_ROSC_CLKSRC));
+    printf("%-8s %9s %9u\n","rosc","-", frequency_count_khz(CLOCKS_FCO_SRC_VALUE_ROSC_CLKSRC));
 }
