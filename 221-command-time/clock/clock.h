@@ -4,11 +4,19 @@
 #include "pico/stdlib.h"
 #include "hardware/clocks.h"
 
+#define CLOCKS_FCO_SRC_VALUE_NULL _u(0x00)
+#define CLOCKS_FCO_SRC_VALUE_PLL_SYS_CLKSRC_PRIMARY _u(0x01)
+#define CLOCKS_FCO_SRC_VALUE_PLL_USB_CLKSRC_PRIMARY _u(0x02)
 #define CLOCKS_FCO_SRC_VALUE_ROSC_CLKSRC _u(0x03)
+#define CLOCKS_FCO_SRC_VALUE_ROSC_CLKSRC_PH _u(0x04)
+#define CLOCKS_FCO_SRC_VALUE_XOSC_CLKSRC _u(0x05)
+#define CLOCKS_FCO_SRC_VALUE_CLKSRC_GPIN0 _u(0x06)
+#define CLOCKS_FCO_SRC_VALUE_CLKSRC_GPIN1 _u(0x07)
 #define CLOCKS_FCO_SRC_VALUE_CLK_REF _u(0x08)
 #define CLOCKS_FCO_SRC_VALUE_CLK_SYS _u(0x09)
 #define CLOCKS_FCO_SRC_VALUE_CLK_PERI _u(0x0a)
 #define CLOCKS_FCO_SRC_VALUE_CLK_USB _u(0x0b)
 #define CLOCKS_FCO_SRC_VALUE_CLK_ADC _u(0x0c)
+#define CLOCKS_FCO_SRC_VALUE_CLK_RTC _u(0x0d)
 
-void clk_info (void);
+void clk_info(void);
