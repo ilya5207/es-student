@@ -22,6 +22,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
    pico_stdlib
    pico_unique_id
+   hardware_clocks
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
