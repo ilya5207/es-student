@@ -18,7 +18,7 @@ void device_info(void)
         uint32_t part = (id & SYSINFO_CHIP_ID_PART_BITS) >> SYSINFO_CHIP_ID_PART_LSB;
         uint32_t revision = (id & SYSINFO_CHIP_ID_REVISION_BITS) >> SYSINFO_CHIP_ID_REVISION_LSB;
     
-    printf("decice name: %s\n", DEVICE_NAME);
+    printf("device name: %s\n", DEVICE_NAME);
     printf("firmware version: %s\n", FIRMWARE_VERSION);    
     printf("project: %s\n", DEVICE_PROJECT);
     printf("repo: %s\n", DEVICE_REPO);
