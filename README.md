@@ -6,3 +6,4 @@
 ![](https://github.com/ilya5207/es-student/actions/workflows/check-2-2-4.yml/badge.svg)
 ![](https://github.com/ilya5207/es-student/actions/workflows/check-2-2-5.yml/badge.svg)
 ![](https://github.com/ilya5207/es-student/actions/workflows/check-2-3-1.yml/badge.svg)
+![](https://github.com/ilya5207/es-student/actions/workflows/check-2-3-2.yml/badge.svg)

@@ -9,14 +9,16 @@ project(231_firmware_template)
 
 pico_sdk_init()
 
+add_compile_options(-Wall)
+
 add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/main.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/led/led.c
     ${CMAKE_CURRENT_SOURCE_DIR}/logging/log.c
     ${CMAKE_CURRENT_SOURCE_DIR}/device/device.c
     ${CMAKE_CURRENT_SOURCE_DIR}/profiling/profiling.c
     ${CMAKE_CURRENT_SOURCE_DIR}/stdio-text-protocol/stdio-text-protocol.c
     ${CMAKE_CURRENT_SOURCE_DIR}/api/api.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/led-task/led-task.c
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -31,12 +33,12 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/led
     ${CMAKE_CURRENT_SOURCE_DIR}/logging
     ${CMAKE_CURRENT_SOURCE_DIR}/device
     ${CMAKE_CURRENT_SOURCE_DIR}/profiling
     ${CMAKE_CURRENT_SOURCE_DIR}/stdio-text-protocol
     ${CMAKE_CURRENT_SOURCE_DIR}/api
+    ${CMAKE_CURRENT_SOURCE_DIR}/led-task
 )
 
 pico_enable_stdio_usb(${PROJECT_NAME} 1)

@@ -38,7 +38,7 @@ const command_t *stdio_text_protocol_handle(void)
                 {
                     line[i] = '\0';
                 }
-                if (i > 0 && line[i] != '\0' && line[i - 1] == '\0' || i == 0 && line[i] != '\0')
+                if ((i > 0 && line[i] != '\0' && line[i - 1] == '\0') || (i == 0 && line[i] != '\0'))
                 {
                     if (!got_name)
                     {
