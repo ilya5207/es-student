@@ -10,6 +10,8 @@
 #include "pico/stdlib.h"
 #include "led-task/led-task.h"
 #include "button-task/button-task.h"
+#include "pi-task/pi-task.h"
+
 
 // обработчик команды: получает имя и аргументы
 typedef void (*api_callback_t)(const command_t *command);
@@ -56,48 +58,54 @@ static bool parse_u32(const char *text, uint32_t *value)
     return true;
 }
 
-// прикидка: за член ряда 4 операции с double, 175 + 110 + 190 + 110 = 585 тактов;
-// 1 000 000 членов по 585 тактов при 125 МГц — около 4,7 с
-const uint CALC_PI_TERMS = 1000000;
-volatile double pi_result;
-
-double calc_pi(uint terms)
+static void cmd_pi_start(const command_t *command)
 {
-    double sum = 0.0;
-    double sign = 1.0;
-
-    for (int k = 0; k < terms; ++k) 
+    uint32_t terms = 1000000;
+    if (command->argc > 1) 
     {
-        sum += sign / (2.0 * k + 1.0);
-        sign = -sign;
+        printf("error: usage pi_start [terms]\n");
+        return;
     }
 
-    return 4.0 * sum;
-}
-
-void cmd_calc_pi(const command_t *command)
-{
-    uint32_t terms = CALC_PI_TERMS;
-    if (command->argc != 0)
+    if (command->argc ==1)
     {
-        if (!parse_u32(command->argv[0], &terms))
+        if(!parse_u32(command->argv[0], &terms) || terms == 0)
         {
-            printf("error: usage calc_pi [terms]\n");
-            return;
+           if(terms == 0) printf("error: terms must be greater than 0\n");
+           else printf("error: usage pi_start [terms]\n");    
+           return;
         }
-        if (terms == 0)
-        {
-            printf("error: terms is zero\n");
-            return;
-        }
+    }
+
+    if (pi_task_start(terms))
+    {
+        printf("pi: started, %lu terms\n", (unsigned long)terms);
+    }
+    else
+    {
+        printf("error: pi is busy\n");
     }
     
-    uint64_t start_us = time_us_64();
-    pi_result = calc_pi(terms);
-    uint64_t spent_us = time_us_64() - start_us;
+}
 
-    printf("pi: %.9f\n", pi_result);
-    printf("time: %llu ms\n", spent_us / 1000);
+static void cmd_pi(const command_t *command)
+{
+    double result = 0.0;
+    uint32_t time_ms = 0;
+    pi_task_state_t pi_state = pi_task_get_result(&result, &time_ms);
+
+    if (pi_state == PI_TASK_NOT_STARTED)
+    {
+        printf("pi: not started\n");
+    }    
+    else if (pi_state == PI_TASK_RUNNING)
+    {
+           printf("pi: running\n");
+    } 
+    else if (pi_state == PI_TASK_READY)
+    {
+        printf("pi: %.9f in %lu ms\n", result, (unsigned long)time_ms);    
+    }
 }
 
 void cmd_main_time_exec(const command_t *command)
@@ -180,7 +188,8 @@ static void cmd_button(const command_t *command)
 const api_command_t commands[] = {
     {"info", "device passport", cmd_info},
     {"uptime", "time since reset", cmd_uptime},
-    {"calc_pi", "calculate pi: calc_pi [terms]", cmd_calc_pi},
+    {"pi_start", "start pi calculation: pi_start [terms]", cmd_pi_start},
+    {"pi", "pi calculation state or result", cmd_pi},
     {"main_time_exec", "superloop iteration: average and maximum", cmd_main_time_exec},
     {"main_time_reset", "reset maximum iteration", cmd_main_time_reset},
     {"led_enable", "Turn LED on", cmd_led_enable},
