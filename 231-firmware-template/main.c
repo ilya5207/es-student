@@ -1,7 +1,7 @@
 #include "pico/stdlib.h"
 #include <stdio.h>
-#include "log.h"
 #include <string.h>
+#include "logging/log.h"
 #include "device/device.h"
 #include "profiling/profiling.h"
 #include "stdio-text-protocol/stdio-text-protocol.h"
@@ -20,19 +20,18 @@ typedef enum
     STOPWATCH_PI,
 } stopwatch_id_t;
 
-int main()
+int main(void)
 {
     stdio_init_all();
     led_task_init();
     stdio_text_protocol_init();
     button_task_init();
-    pi_task_init();
     profiling_stopwatch_init(STOPWATCH_LOOP, "loop");
     profiling_stopwatch_init(STOPWATCH_COMMAND, "command");
     profiling_stopwatch_init(STOPWATCH_LED, "led");
     profiling_stopwatch_init(STOPWATCH_BUTTON, "button");
     profiling_stopwatch_init(STOPWATCH_PI, "pi");
-    LOG_INF("%s %s\n", DEVICE_NAME, FIRMWARE_VERSION);
+    LOG_INF("%s %s\n", FIRMWARE_NAME, FIRMWARE_VERSION);
 
     while (1)
     {
