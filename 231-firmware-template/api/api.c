@@ -5,13 +5,13 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "device.h"
-#include "profiling.h"
+#include "device/device.h"
+#include "profiling/profiling.h"
 #include "pico/stdlib.h"
 #include "led-task/led-task.h"
 #include "button-task/button-task.h"
 #include "pi-task/pi-task.h"
-
+#include "firmware.h"
 
 // обработчик команды: получает имя и аргументы
 typedef void (*api_callback_t)(const command_t *command);
@@ -24,13 +24,24 @@ typedef struct
     api_callback_t callback;
 } api_command_t;
 
-void cmd_info(const command_t *command)
+static void cmd_info(const command_t *command)
 {
-        device_info();
+        (void)command;
+        device_info_t info;
+        device_get_info(&info);
+        printf("device name: %s\n", DEVICE_NAME);
+        printf("firmware version: %s\n", FIRMWARE_VERSION);    
+        printf("project: %s\n", DEVICE_PROJECT);
+        printf("repo: %s\n", DEVICE_REPO);
+        printf("board: %s\n", info.board);
+        printf("serial: %s\n", info.serial);
+        printf("chip: manufacturer 0x%03x, part 0x%04x, revision %u\n", (unsigned)info.manufacturer, (unsigned)info.part, (unsigned)info.revision);
+        printf("pico-sdk: %s\n", info.sdk_version);    
 }
 
-void cmd_uptime(const command_t *command)
+static void cmd_uptime(const command_t *command)
 {
+    (void)command;
     printf("uptime: %llu ms\n", time_us_64() / 1000);
 }
 
@@ -108,15 +119,24 @@ static void cmd_pi(const command_t *command)
     }
 }
 
-void cmd_main_time_exec(const command_t *command)
+static void cmd_profiling(const command_t *command)
 {
-    printf("iteration avg %.2f us, max %u us\n", profiling_avg_us(), (unsigned)profiling_max_us());
+        (void)command;
+        for (uint32_t id = 0; id < PROFILING_STOPWATCH_COUNT; id++)
+        {
+            profiling_result_t result;
+            if (profiling_get(id, &result))
+            {
+                printf("%-10s count %-10u mean %.2f us max %u us\n", result.name, (unsigned)result.count, result.mean_us, (unsigned)result.max_us);
+            }
+        }       
 }
 
-void cmd_main_time_reset(const command_t *command)
+static void cmd_profiling_reset(const command_t *command)
 {
-    profiling_reset_max();
-    printf("max reset\n");
+    (void)command;
+    profiling_reset();
+    printf("profiling reset\n");
 }
 
 static void print_led_state(void)
@@ -190,8 +210,8 @@ const api_command_t commands[] = {
     {"uptime", "time since reset", cmd_uptime},
     {"pi_start", "start pi calculation: pi_start [terms]", cmd_pi_start},
     {"pi", "pi calculation state or result", cmd_pi},
-    {"main_time_exec", "superloop iteration: average and maximum", cmd_main_time_exec},
-    {"main_time_reset", "reset maximum iteration", cmd_main_time_reset},
+    {"profiling", "show stopwatches", cmd_profiling},
+    {"profiling_reset", "reset stopwatches", cmd_profiling_reset},
     {"led_enable", "Turn LED on", cmd_led_enable},
     {"led_disable", "Turn LED off", cmd_led_disable},
     {"led_blink", "Blink LED", cmd_led_blink},
