@@ -29,7 +29,7 @@ void profiling_stopwatch_init(uint32_t id, const char *name)
 #if PROFILING_ENABLED
 void profiling_start(uint32_t id)
 {
-    if (id < PROFILING_STOPWATCH_COUNT && stopwatches[id].name !=NULL)
+    if (id < PROFILING_STOPWATCH_COUNT && stopwatches[id].name != NULL)
     {
         stopwatches[id].started_us = time_us_32();
     }
@@ -62,7 +62,7 @@ bool profiling_get(uint32_t id, profiling_result_t *result)
     
     result->name = stopwatches[id].name;
     result->count = stopwatches[id].count;
-    result->mean_us = stopwatches[id].count == 0 ? 0.0f : (float)stopwatches[id].count;
+    result->mean_us = stopwatches[id].count == 0 ? 0.0f : (float)stopwatches[id].total_us / stopwatches[id].count;
     result->max_us = stopwatches[id].max_us;
     return true;
 }
