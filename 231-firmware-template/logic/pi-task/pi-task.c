@@ -1,6 +1,5 @@
 #include "pi-task/pi-task.h"
-#include "pico/time.h"
-#include "pico/stdlib.h"
+
 #include "systime/systime.h"
 
 /* One term takes about 4.7 us, so 100 terms fit into 0.5 ms. */

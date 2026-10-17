@@ -1,9 +1,7 @@
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
-
-#ifndef PI_TASK_H
-#define PI_TASK_H
 
 typedef enum {
     PI_TASK_NOT_STARTED,
@@ -21,5 +19,3 @@ typedef struct {
 bool pi_task_start(uint32_t terms);
 void pi_task_handle(void);
 void pi_task_get_result(pi_task_result_t *result);
-
-#endif
