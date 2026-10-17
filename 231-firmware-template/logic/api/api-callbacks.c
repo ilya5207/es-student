@@ -19,8 +19,8 @@ static void cmd_info(const command_t *command)
         (void)command;
         device_info_t info;
         device_get_info(&info);
-        printf("device name: %s\n", FIRMWARE_NAME);
-        printf("firmware version: %s\n", FIRMWARE_VERSION);    
+        printf("name: %s\n", FIRMWARE_NAME);
+        printf("version: %s\n", FIRMWARE_VERSION);    
         printf("project: %s\n", FIRMWARE_PROJECT);
         printf("repo: %s\n", FIRMWARE_REPO);
         printf("board: %s\n", info.board);

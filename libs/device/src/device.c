@@ -6,6 +6,9 @@
 #include "hardware/regs/addressmap.h"
 #include "hardware/regs/sysinfo.h"
 
+#ifndef DIVICE_BOARD
+#define DEVICE_BOARD "unknown"
+#endif
 
 void device_get_info(device_info_t *info)
 {
