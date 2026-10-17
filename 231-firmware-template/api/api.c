@@ -114,6 +114,7 @@ static void cmd_pi(const command_t *command)
 static void cmd_profiling(const command_t *command)
 {
         (void)command;
+#if PROFILING_ENABLED        
         for (uint32_t id = 0; id < PROFILING_STOPWATCH_COUNT; id++)
         {
             profiling_result_t result;
@@ -121,7 +122,10 @@ static void cmd_profiling(const command_t *command)
             {
                 printf("%-10s count %-10u mean %.2f us max %u us\n", result.name, (unsigned)result.count, result.mean_us, (unsigned)result.max_us);
             }
-        }       
+        }
+    #else
+        printf("profiling is disabled in this build\n");
+    #endif           
 }
 
 static void cmd_profiling_reset(const command_t *command)
@@ -201,10 +205,10 @@ static const api_command_t commands[] = {
     {"pi", "pi calculation state or result", cmd_pi},
     {"profiling", "show stopwatches", cmd_profiling},
     {"profiling_reset", "reset stopwatches", cmd_profiling_reset},
-    {"led_enable", "Turn LED on", cmd_led_enable},
-    {"led_disable", "Turn LED off", cmd_led_disable},
-    {"led_blink", "Blink LED", cmd_led_blink},
-    {"led_period", "Set LED blink period in ms", cmd_led_period},
+    {"led_enable", "turn LED on", cmd_led_enable},
+    {"led_disable", "turn LED off", cmd_led_disable},
+    {"led_blink", "blink LED", cmd_led_blink},
+    {"led_period", "set blink period: led_period <period_ms>", cmd_led_period},
     {"button", "button state and press count", cmd_button},
 };
 

@@ -14,6 +14,8 @@ uint64_t systime_ms(void)
 
 bool systime_period_elapsed(uint64_t *last_us, uint64_t period_us)
 {
+    if (!last_us) return false;
+
     uint64_t now_us = systime_us();
     if (now_us - *last_us < period_us)
     {
