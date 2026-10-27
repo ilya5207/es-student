@@ -190,7 +190,7 @@ static void cmd_get_voltage(const command_t *command)
 {
     (void)command;
     platform_voltage_read();
-    printf("voltage: %.8f V\n", platform_voltage_read());
+    printf("voltage: %.3f V\n", platform_voltage_read());
 }
 
 const api_command_t api_commands[] = {
