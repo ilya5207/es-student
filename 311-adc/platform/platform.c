@@ -13,6 +13,8 @@
 #define ADC_VREF_V 3.3f
 #define ADC_LEVELS 4096
 
+#define ADC_TEMP_CHANNEL 4
+
 void platform_init(void)
 {
     stdio_init_all();
@@ -23,6 +25,7 @@ void platform_init(void)
     gpio_pull_up(BUTTON_PIN);
     adc_init();
     adc_gpio_init(ADC_PIN);
+    adc_set_temp_sensor_enabled(true);
 }
 
 void platform_led_set(bool on)
@@ -39,4 +42,12 @@ float platform_voltage_read(void)
 {
     adc_select_input(ADC_CHANNEL);
     return adc_read() * ADC_VREF_V / ADC_LEVELS;
+}
+
+float platform_temp_read(void)
+{
+    adc_select_input(ADC_TEMP_CHANNEL);
+    float U = adc_read() * ADC_VREF_V / ADC_LEVELS;
+    float T = 27 - (U - 0.706) / 0.001721;
+    return T;
 }
