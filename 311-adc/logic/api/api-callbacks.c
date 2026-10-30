@@ -14,6 +14,7 @@
 #include "platform/platform.h"
 
 #define CALC_PI_DEFAULT_TERMS 1000000u
+#define TELEMETRY_DEFAULT_PERIOD_MS 100
 
 static void cmd_info(const command_t *command)
 {
@@ -200,6 +201,34 @@ static void cmd_get_temp(const command_t *command)
     printf("temp: %.1f C\n", platform_temp_read());
 }
 
+void api_print_telemetry(const telemetry_record_t *record)
+{
+    printf("tm: %llu %.3f %.1f\n", (unsigned long long)record->time_us, record->voltage_v, record->temp_c);
+}
+
+static void command_tm_start(const command_t *command)
+{
+    uint32_t period_ms = TELEMETRY_DEFAULT_PERIOD_MS;
+    if (command->argc > 1 || (command->argc == 1 && !parse_u32(command->argv[0], &period_ms)))
+    {
+        printf("error: usage tm_start [<period_ms>]\n");
+        return;
+    }
+    if (!telemetry_task_start(period_ms))
+    {
+        printf("error: period_ms must be at least 10\n");
+        return;
+    }
+    printf("telemetry: started, period %u ms\n", (unsigned)period_ms);
+}
+
+static void command_tm_stop(const command_t *command)
+{
+    (void)command;
+    telemetry_task_stop();
+    printf("telemetry: stopped\n");
+}
+
 const api_command_t api_commands[] = {
     {"info", "device passport", cmd_info},
     {"uptime", "time since reset", cmd_uptime},
@@ -214,6 +243,8 @@ const api_command_t api_commands[] = {
     {"button", "button state and press count", cmd_button},
     {"get_voltage", "voltage on GP26, ADC input 0", cmd_get_voltage},
     {"get_temp", "chip temperature, degrees Celsius", cmd_get_temp},
+    {"tm_start", "start telemetry: tm_start [<period_ms>]", command_tm_start},
+    {"tm_stop", "stop telemetry", command_tm_stop},
 };
 
 const uint32_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
