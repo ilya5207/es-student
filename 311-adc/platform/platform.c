@@ -15,6 +15,8 @@
 
 #define ADC_TEMP_CHANNEL 4
 
+#define CHARGE_PIN 22
+
 void platform_init(void)
 {
     stdio_init_all();
@@ -26,6 +28,9 @@ void platform_init(void)
     adc_init();
     adc_gpio_init(ADC_PIN);
     adc_set_temp_sensor_enabled(true);
+    gpio_init(CHARGE_PIN);
+    gpio_put(CHARGE_PIN, false);
+    gpio_set_dir(CHARGE_PIN, GPIO_OUT);
 }
 
 void platform_led_set(bool on)
@@ -50,4 +55,9 @@ float platform_temp_read(void)
     float U = adc_read() * ADC_VREF_V / ADC_LEVELS;
     float T = 27 - (U - 0.706) / 0.001721;
     return T;
+}
+
+void platform_charge_set(bool on)
+{
+    gpio_put(CHARGE_PIN, on);
 }
