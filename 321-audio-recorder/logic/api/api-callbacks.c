@@ -270,6 +270,57 @@ static void cmd_timer_blink_stop(const command_t *command)
     printf("timer_blink: stopped, %u toggles\n", (unsigned)platform_blink_stop());
 }
 
+static void cmd_cap_start(const command_t *command)
+{
+    uint32_t count, period_us;
+    if (command->argc != 2 || !parse_u32(command->argv[0], &count) || !parse_u32(command->argv[1], &period_us))
+    {
+        puts("error: usage cap_start <N> <period_us>\n");
+        return;
+    }
+    if (count == 0 || count > PLATFORM_CAPTURE_MAX || period_us < 10)
+    {
+        puts("error: N must be 1..2000, period_us at least 10\n");
+        return;
+    }
+    if (telemetry_task_get_state() == TELEMETRY_STATE_RUN || !platform_capture_start(count, period_us))
+    {
+        puts("error: adc_busy\n");
+        return;
+    }
+    printf("capture: started, %u samples, period %u us\n", (unsigned)count, (unsigned)period_us);
+}
+
+static void cmd_cap_dump(const command_t *command)
+{
+    (void)command;
+    if (platform_adc_busy())
+    {
+        puts("error: adc busy\n");
+        return;
+    }
+    if (!platform_capture_done())
+    {
+        puts("error: no capture\n");
+        return;
+    }
+    platform_capture_t capture;
+    platform_capture_get(&capture);
+    printf("capture: %u samples, period %u us, interval %u..%u us, handler %.1f %%\n", (unsigned)capture.count, (unsigned)capture.period_us, (unsigned)capture.min_interval_us, (unsigned)capture.max_interval_us, (double)capture.handler_percent);
+    for (uint32_t i = 0; i < capture.count; i++)
+    {
+        if (i % 16 == 0)
+        {
+            printf("cap:");
+        }    
+        printf(" %u", (unsigned)capture.samples[i]);
+        if (i % 16 == 15 || i + 1 == capture.count)
+        {
+            printf("\n");
+        }        
+    }
+}
+
 const api_command_t api_commands[] = {
     {"info", "device passport", cmd_info},
     {"uptime", "time since reset", cmd_uptime},
@@ -290,6 +341,8 @@ const api_command_t api_commands[] = {
     {"charge_off", "discharge RC circuit", command_charge_off},
     {"timer_blink_start", "blink led by timer: timer_blink_start <period_ms>", cmd_timer_blink_start},
     {"timer_blink_stop", "stop timer blink, number of toggles", cmd_timer_blink_stop},
+    {"cap_start", "capture ADC: cap_start <N> <period_us>", cmd_cap_start},
+    {"cap_dump", "capture samples and timer intervals", cmd_cap_dump},
 };
 
 const uint32_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
