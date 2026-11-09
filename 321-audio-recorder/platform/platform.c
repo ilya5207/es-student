@@ -36,6 +36,7 @@ typedef enum {
     ADC_FREE,
     ADC_CAPTURE,
     ADC_BLOCK,
+    ADC_STREAM,
 } adc_user_t;
 
 static volatile adc_user_t adc_user;
@@ -47,6 +48,13 @@ static uint32_t capture_count;
 static uint32_t capture_period_us;
 static volatile uint32_t capture_index;
 static volatile uint32_t capture_handler_us;
+
+static int stream_channels[2];
+static uint8_t stream_buffers[2][PLATFORM_STREAM_BYTES] __attribute__((aligned(4)));
+static volatile bool stream_ready[2];
+static volatile uint32_t stream_overruns;
+static uint32_t stream_samples;
+static uint32_t stream_next;
 
 static void adc_free_running(void)
 {
@@ -72,6 +80,88 @@ static void on_block_done(void)
     adc_user = ADC_FREE;
 }
 
+static void on_stream_buffer(void)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        if (dma_channel_get_irq0_status(stream_channels[i]))
+        {
+            dma_channel_acknowledge_irq0(stream_channels[i]);
+            dma_channel_set_write_addr(stream_channels[i], stream_buffers[i], false);
+
+            if (stream_ready[(i + 1) % 2])
+            {
+                stream_overruns++;
+            }
+            stream_ready[i] = true;
+        }
+    }
+}
+
+bool platform_stream_start(uint8_t bits)
+{
+    if (adc_user != ADC_FREE || bits != 16)
+    {
+        return false;
+    }
+
+    stream_samples = PLATFORM_STREAM_BYTES / 2;
+    adc_free_running();
+
+    for (int i = 0; i < 2; i++)
+    {
+        int next_channel = stream_channels[(i + 1) % 2];
+
+        dma_channel_config cfg = dma_channel_get_default_config(stream_channels[i]);
+        channel_config_set_transfer_data_size(&cfg, DMA_SIZE_16);
+        channel_config_set_read_increment(&cfg, false);
+        channel_config_set_write_increment(&cfg, true);
+        channel_config_set_dreq(&cfg, DREQ_ADC);
+        channel_config_set_chain_to(&cfg, next_channel);
+        dma_channel_configure(stream_channels[i], &cfg, stream_buffers[i], &adc_hw->fifo, stream_samples, false);
+        dma_channel_set_irq0_enabled(stream_channels[i], true);
+        stream_ready[i] = false;
+    }
+
+    stream_overruns = 0;
+    stream_next = 0;
+    adc_user = ADC_STREAM;
+    dma_channel_start(stream_channels[0]);
+    adc_run(true);
+    return true;
+}
+
+void platform_stream_stop(void)
+{
+    if (adc_user != ADC_STREAM)
+    {
+        return;
+    }
+
+    adc_run(false);
+
+    for (int i = 0; i < 2; i++)
+    {
+        dma_channel_config cfg = dma_get_channel_config(stream_channels[i]);
+        channel_config_set_chain_to(&cfg, stream_channels[i]);
+        dma_channel_set_config(stream_channels[i], &cfg, false);
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+        dma_channel_set_irq0_enabled(stream_channels[i], false);
+        dma_channel_abort(stream_channels[i]);
+        dma_channel_acknowledge_irq0(stream_channels[i]);
+    }
+    adc_one_shot();
+    adc_user = ADC_FREE;
+}
+
+void platform_write(const void *data, uint32_t bytes)
+{
+    stdio_put_string((const char *)data, (int)bytes, false, false);
+}
+
 void platform_init(void)
 {
     stdio_init_all();
@@ -91,6 +181,11 @@ void platform_init(void)
     dma_channel_set_irq1_enabled(block_channel, true);
     irq_set_exclusive_handler(DMA_IRQ_1, on_block_done);
     irq_set_enabled(DMA_IRQ_1, true);
+
+    stream_channels[0] = dma_claim_unused_channel(true);
+    stream_channels[1] = dma_claim_unused_channel(true);
+    irq_set_exclusive_handler(DMA_IRQ_0, on_stream_buffer);
+    irq_set_enabled(DMA_IRQ_0, true);
 }
 
 void platform_led_set(bool on)
@@ -282,4 +377,26 @@ const uint16_t *platform_block_samples(void)
 uint32_t platform_block_time_us(void)
 {
     return block_end_us - block_start_us;
+}
+
+const uint8_t *platform_stream_next(uint32_t *samples)
+{
+    if (!stream_ready[stream_next])
+    {
+        return NULL;
+    }
+
+    *samples = stream_samples;
+    return stream_buffers[stream_next];
+}
+
+void platform_stream_release(void)
+{
+    stream_ready[stream_next] = false;
+    stream_next = (stream_next + 1) % 2;
+}
+
+uint32_t platform_stream_overruns(void)
+{
+    return stream_overruns;
 }
