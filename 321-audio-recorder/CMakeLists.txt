@@ -25,6 +25,7 @@ target_link_libraries(platform PRIVATE
     pico_stdlib
     hardware_adc
     hardware_dma
+    hardware_pwm
 )
 
 add_library(logic STATIC
