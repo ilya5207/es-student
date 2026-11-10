@@ -7,6 +7,7 @@
 #include "hardware/irq.h"
 #include "hardware/clocks.h"
 #include "hardware/pwm.h"
+#include "hardware/watchdog.h"
 
 #define LED_PIN 25
 #define BUTTON_PIN 15
@@ -25,6 +26,8 @@
 
 #define TONE_PIN 20
 #define TONE_COUNT_HZ 1000000
+
+#define WATCHDOG_MAX_MS 8388
 
 static int block_channel;
 static uint16_t block_samples[PLATFORM_BLOCK_MAX];
@@ -60,6 +63,9 @@ static volatile bool stream_ready[2];
 static volatile uint32_t stream_overruns;
 static uint32_t stream_samples;
 static uint32_t stream_next;
+
+static bool watchdog_reset;
+static uint32_t watchdog_restarts;
 
 static void adc_free_running(void)
 {
@@ -169,6 +175,18 @@ void platform_write(const void *data, uint32_t bytes)
 
 void platform_init(void)
 {
+    watchdog_reset = watchdog_enable_caused_reboot();
+    if (watchdog_reset)
+    {
+        watchdog_hw->scratch[0]++;
+    }
+    else
+    {
+        watchdog_hw->scratch[0] = 0;
+    }
+    watchdog_restarts = watchdog_hw->scratch[0];
+
+
     stdio_init_all();
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
@@ -429,4 +447,26 @@ bool platform_tone_set(uint32_t freq_hz)
     pwm_set_wrap(pwm_gpio_to_slice_num(TONE_PIN), period - 1);
     pwm_set_gpio_level(TONE_PIN, period / 2);
     return true;
+}
+
+bool platform_watchdog_enable(uint32_t timeout_ms)
+{
+    if (timeout_ms == 0 || timeout_ms > WATCHDOG_MAX_MS)
+    {
+        return false;
+    }
+
+    watchdog_enable(timeout_ms, true);
+    return true;
+}
+
+void platform_watchdog_feed(void)
+{
+    watchdog_update();
+}
+
+bool platform_watchdog_caused_reset(uint32_t *restarts)
+{
+    *restarts = watchdog_restarts;
+    return watchdog_reset;
 }
