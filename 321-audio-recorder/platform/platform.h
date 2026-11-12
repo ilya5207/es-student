@@ -3,6 +3,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define ADC_VREF_V 3.3f
+#define ADC_LEVELS 4096
+
 void platform_init(void);
 void platform_led_set(bool on);
 bool platform_button_read(void);
@@ -57,3 +60,5 @@ bool platform_watchdog_enable(uint32_t timeout_ms);
 void platform_watchdog_feed(void);
 
 bool platform_watchdog_caused_reset(uint32_t *restarts);
+
+float platform_adc_volts(float code);
