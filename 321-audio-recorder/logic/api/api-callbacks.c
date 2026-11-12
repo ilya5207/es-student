@@ -504,7 +504,7 @@ static void print_mic_bias(const uint16_t *samples, uint32_t count, uint32_t tim
     float mean, rms, peak;
     block_stats(samples, count, &mean, &rms, &peak);
     float volts = platform_adc_volts(mean);
-    printf("mic: bias %3f V\n", volts);
+    printf("mic: bias %.3f V\n", volts);
 }
 
 static void print_mic_level(const uint16_t *samples, uint32_t count, uint32_t time_us)
@@ -515,7 +515,7 @@ static void print_mic_level(const uint16_t *samples, uint32_t count, uint32_t ti
     float rms_mv = rms * 1000 * ADC_VREF_V / ADC_LEVELS;
     float peak_mv = peak * 1000 * ADC_VREF_V / ADC_LEVELS;
     uint32_t window_ms = (uint32_t)((uint64_t)count * 1000 / PLATFORM_SAMPLE_RATE_HZ);
-    printf("mic: level %1f mV rms, peak %1f mV, %u ms\n", (double)rms_mv, (double)peak_mv, (unsigned)window_ms);
+    printf("mic: level %.1f mV rms, peak %.1f mV, %u ms\n", (double)rms_mv, (double)peak_mv, (unsigned)window_ms);
 }
 
 static void start_block(uint32_t count, block_task_callback_t callback)
