@@ -67,10 +67,10 @@ static uint32_t stream_next;
 static bool watchdog_reset;
 static uint32_t watchdog_restarts;
 
-static void adc_free_running(void)
+static void adc_free_running(bool bits8)
 {
     adc_select_input(ADC_CHANNEL);
-    adc_fifo_setup(true, true, 1, false, false);
+    adc_fifo_setup(true, true, 1, false, bits8);
     adc_set_clkdiv(ADC_CLOCK_HZ / PLATFORM_SAMPLE_RATE_HZ - 1);
 }
 
@@ -111,20 +111,23 @@ static void on_stream_buffer(void)
 
 bool platform_stream_start(uint8_t bits)
 {
-    if (adc_user != ADC_FREE || bits != 16)
+    if (adc_user != ADC_FREE || (bits != 8 && bits != 16)) 
     {
         return false;
     }
 
-    stream_samples = PLATFORM_STREAM_BYTES / 2;
-    adc_free_running();
+    bool bits8 = (bits == 8);
+    stream_samples = bits8 ? PLATFORM_STREAM_BYTES : PLATFORM_STREAM_BYTES / 2;
+    adc_free_running(bits8);
+
+    enum dma_channel_transfer_size dma_size = bits8 ? DMA_SIZE_8 : DMA_SIZE_16;
 
     for (int i = 0; i < 2; i++)
     {
         int next_channel = stream_channels[(i + 1) % 2];
 
         dma_channel_config cfg = dma_channel_get_default_config(stream_channels[i]);
-        channel_config_set_transfer_data_size(&cfg, DMA_SIZE_16);
+        channel_config_set_transfer_data_size(&cfg, dma_size);
         channel_config_set_read_increment(&cfg, false);
         channel_config_set_write_increment(&cfg, true);
         channel_config_set_dreq(&cfg, DREQ_ADC);
@@ -376,7 +379,7 @@ bool platform_block_start(uint32_t count)
         return false;
     }
 
-    adc_free_running();
+    adc_free_running(false);
 
     dma_channel_config cfg = dma_channel_get_default_config(block_channel);
     channel_config_set_transfer_data_size(&cfg, DMA_SIZE_16);
