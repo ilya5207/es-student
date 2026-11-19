@@ -24,6 +24,7 @@ target_include_directories(platform PUBLIC
 target_link_libraries(platform PRIVATE 
     pico_stdlib
     hardware_adc
+    hardware_uart
 )
 
 add_library(logic STATIC
@@ -33,6 +34,7 @@ add_library(logic STATIC
     logic/button-task/button-task.c
     logic/pi-task/pi-task.c
     logic/edge-task/edge-task.c
+    logic/uart-task/uart-task.c
 )
 
 target_include_directories(logic PUBLIC
