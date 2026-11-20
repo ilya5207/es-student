@@ -1,0 +1,64 @@
+задание: 3.3.4
+проект: 331-uart
+устройство: 2e8a:000a
+серийный номер: 50444668885AAA1C
+порт: COM4
+начало: 2026-11-21T00:38:35
+   0.000 --> 
+   0.511 --> help
+   0.512 <-- help
+   0.512 <-- help             list of commands
+   0.512 <-- info             device passport
+   0.512 <-- uptime           time since reset
+   0.512 <-- pi_start         start pi calculation: pi_start [terms]
+   0.512 <-- pi               pi calculation state or result
+   0.512 <-- profiling        show stopwatches
+   0.513 <-- profiling_reset  reset stopwatches
+   0.513 <-- led_enable       turn LED on
+   0.513 <-- led_disable      turn LED off
+   0.513 <-- led_blink        blink LED
+   0.513 <-- led_period       set blink period: led_period <period_ms>
+   0.513 <-- button           button state and press count
+   0.513 <-- edge             rise and fall of the RC line: edge pp|od
+   0.513 <-- loop             UART0 loopback: loop internal|pins
+   0.513 <-- echo             text through UART0 and back: echo <text>
+   0.513 <-- link             text from UART0 to UART1 and back: link <text>
+   0.574 <-- baud_shift       shift UART1 baud rate: baud_shift <percent>
+   0.574 <-- text             32 characters from UART1 to UART0
+   0.575 <-- parity           parity of UART0 and UART1: parity <rx> <tx>
+   0.575 <-- block            64 bytes from UART1 to UART0: block irq|poll
+   1.545 --> info
+   1.609 <-- info
+   1.610 <-- name: es-uart
+   1.610 <-- version: 1.0.0
+   1.610 <-- project: 331-uart
+   1.610 <-- repo: https://github.com/ilya5207/es-student
+   1.611 <-- board: pico
+   1.611 <-- serial: 50444668885AAA1C
+   1.611 <-- chip: manufacturer 0x927, part 0x0002, revision 2
+   1.612 <-- pico-sdk: 2.3.0
+   2.572 --> loop pins
+   2.636 <-- loop pins
+   2.637 <-- loop: pins
+   3.082 --> parity none none
+   3.146 <-- parity none none
+   3.146 <-- parity: uart0 none, uart1 none
+   3.602 --> baud_shift 0
+   3.666 <-- baud_shift 0
+   3.666 <-- baud_shift: uart1 115207 baud
+   4.124 --> block irq
+   4.189 <-- block irq
+   4.189 <-- block irq: 64/64 match, err: none
+   4.646 --> block poll
+   4.711 <-- block poll
+   4.711 <-- block poll: 32/64 match, err:OE
+   5.166 --> block irq
+   5.230 <-- block irq
+   5.231 <-- block irq: 64/64 match, err: none
+   5.687 --> block poll
+   5.751 <-- block poll
+   5.752 <-- block poll: 32/64 match, err:OE
+   6.205 --> block xx
+   6.269 <-- block xx
+   6.270 <-- error: usage block irq|poll
+итог: отправлено кадров 11, принято строк 46

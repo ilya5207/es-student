@@ -18,6 +18,11 @@
 
 #define CALC_PI_DEFAULT_TERMS 1000000u
 
+#define BLOCK_SIZE 64
+
+static uint8_t block_data[BLOCK_SIZE];
+static bool block_irq;
+
 static const size_t TEXT_MAX_LENGTH = 32;
 static const uint32_t UART_DEFAULT_BAUD = 115200u;
 
@@ -448,6 +453,41 @@ static void cmd_parity(const command_t *command)
     printf("parity: uart0 %s, uart1 %s\n", command->argv[0], command->argv[1]);
 }
 
+static void print_block(const uint8_t *data, size_t size, uint32_t errors)
+{
+    platform_uart_rx_irq_set(false);
+
+    bool match = size > 0 && size <= sizeof(block_data) && memcmp(data, block_data, size) == 0;
+    printf("block %s: %u/%u %s, ", block_irq ? "irq" : "poll", (unsigned)size, (unsigned)BLOCK_SIZE, match ? "match" : "mismatch");
+    print_errors(errors);
+    putchar('\n');
+}
+
+static void cmd_block(const command_t *command)
+{
+    if (command->argc != 1 || (strcmp(command->argv[0], "irq") != 0 && strcmp(command->argv[0], "poll") != 0))
+    {
+        printf("error: usage block irq|poll\n");
+        return;
+    }
+
+    bool use_irq = strcmp(command->argv[0], "irq") == 0;
+    for (size_t i = 0; i < sizeof(block_data); i++)
+    {
+        block_data[i] = (uint8_t)i;
+    }
+
+    platform_uart_rx_irq_set(use_irq);
+    if (!uart_task_start(PLATFORM_UART1, PLATFORM_UART0, block_data, sizeof(block_data), print_block))
+    {
+        platform_uart_rx_irq_set(false);
+        printf("error: uart is busy\n");
+        return;
+    }
+
+    block_irq = use_irq;
+}
+
 const api_command_t api_commands[] = {
     {"info", "device passport", cmd_info},
     {"uptime", "time since reset", cmd_uptime},
@@ -467,6 +507,7 @@ const api_command_t api_commands[] = {
     {"baud_shift", "shift UART1 baud rate: baud_shift <percent>", cmd_baud_shift},
     {"text", "32 characters from UART1 to UART0", cmd_text},
     {"parity", "parity of UART0 and UART1: parity <rx> <tx>", cmd_parity},
+    {"block", "64 bytes from UART1 to UART0: block irq|poll", cmd_block},
 };
 
 const uint32_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
