@@ -338,7 +338,7 @@ static void cmd_echo(const command_t *command)
 
 static void print_link_back(const uint8_t *data, size_t size, uint32_t errors)
 {
-    printf("01->0: ");
+    printf("1->0: ");
     print_bytes(data, size);
     putchar(' ');
     print_errors(errors);
