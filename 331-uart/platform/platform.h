@@ -26,6 +26,12 @@ typedef enum {
 #define PLATFORM_UART_BE 0x4
 #define PLATFORM_UART_OE 0x8
 
+typedef enum {
+    PLATFORM_PARITY_NONE,
+    PLATFORM_PARITY_EVEN,
+    PLATFORM_PARITY_ODD,
+} platform_parity_t;
+
 void platform_uart_loop_set(bool internal);
 
 void platform_uart_clear(platform_uart_t uart);
@@ -37,3 +43,7 @@ bool platform_uart_busy(platform_uart_t uart);
 size_t platform_uart_read(platform_uart_t uart, uint8_t *data, size_t size);
 
 uint32_t platform_uart_errors(platform_uart_t uart);
+
+uint32_t platform_uart_baud_set(platform_uart_t uart, uint32_t baud);
+
+void platform_uart_parity_set(platform_uart_t uart, platform_parity_t parity);
