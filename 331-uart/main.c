@@ -9,6 +9,7 @@
 #include "platform/platform.h"
 #include "edge-task/edge-task.h"
 #include "uart-task/uart-task.h"
+#include "block-task/block-task.h"
 
 typedef enum
 {
@@ -19,6 +20,7 @@ typedef enum
     STOPWATCH_PI,
     STOPWATCH_EDGE,
     STOPWATCH_UART,
+    STOPWATCH_BLOCK,
 } stopwatch_id_t;
 
 int main(void)
@@ -34,6 +36,7 @@ int main(void)
     profiling_stopwatch_init(STOPWATCH_PI, "pi");
     profiling_stopwatch_init(STOPWATCH_EDGE, "edge");
     profiling_stopwatch_init(STOPWATCH_UART, "uart");
+    profiling_stopwatch_init(STOPWATCH_BLOCK, "block");
     LOG_INF("%s %s\n", FIRMWARE_NAME, FIRMWARE_VERSION);
 
     while (1)
@@ -62,6 +65,10 @@ int main(void)
         profiling_start(STOPWATCH_UART);
         uart_task_handle();
         profiling_stop(STOPWATCH_UART);
+
+        profiling_start(STOPWATCH_BLOCK);
+        block_task_handle();
+        profiling_stop(STOPWATCH_BLOCK);
 
        profiling_start(STOPWATCH_COMMAND);
        const command_t *command = stdio_text_protocol_handle();

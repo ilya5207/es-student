@@ -9,6 +9,14 @@ void platform_led_set(bool on);
 bool platform_button_read(void);
 float platform_voltage_read(void);
 
+#define PLATFORM_SAMPLE_RATE_HZ 500000
+
+#define PLATFORM_BLOCK_MAX 4096
+bool platform_block_start(uint32_t count);
+bool platform_block_done(void);
+const uint16_t *platform_block_samples(void);
+uint32_t platform_block_time_us(void);
+
 typedef enum {
     PLATFORM_LINE_PUSH_PULL,
     PLATFORM_LINE_OPEN_DRAIN,
