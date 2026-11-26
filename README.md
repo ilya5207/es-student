@@ -33,3 +33,4 @@
 ![](https://github.com/ilya5207/es-student/actions/workflows/check-3-3-3.yml/badge.svg)
 ![](https://github.com/ilya5207/es-student/actions/workflows/check-3-3-4.yml/badge.svg)
 ![](https://github.com/ilya5207/es-student/actions/workflows/check-3-3-5.yml/badge.svg)
+![](https://github.com/ilya5207/es-student/actions/workflows/check-4-1-1.yml/badge.svg)
