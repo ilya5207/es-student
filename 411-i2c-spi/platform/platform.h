@@ -21,3 +21,8 @@ void platform_slave_init(uint8_t address, platform_register_read_t read_register
                          platform_register_write_t write_register);
 
 void platform_led_set(bool on);
+
+void platform_spi_slave_reset(void);
+bool platform_spi_slave_selected(void);
+bool platform_spi_slave_receive(uint8_t *byte);
+void platform_spi_slave_reply(uint8_t byte);
