@@ -14,7 +14,10 @@ void platform_spi_write(uint8_t cs, uint8_t command, uint8_t value);
 uint8_t platform_spi_read(uint8_t cs, uint8_t command, uint8_t pause_us);
 
 void platform_start_core1(void (*entry)(void));
-void platform_slave_init(void);
+typedef uint8_t (*platform_register_read_t)(uint8_t reg);
+typedef void (*platform_register_write_t)(uint8_t reg, uint8_t value);
+
+void platform_slave_init(uint8_t address, platform_register_read_t read_register,
+                         platform_register_write_t write_register);
 
 void platform_led_set(bool on);
-uint32_t platform_time_ms(void);
